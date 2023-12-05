@@ -490,9 +490,10 @@ end % slice_eval
 tab_varNames = ["Slice","Perc. Fluctuation","Drift","Mean signal","SNR","SFNR","Rdc"];
 
 if exist(fullfile(fpath_output,['TableResults_' ProtocolName '.mat']))
+    disp('Table results for this measurement already exists. It will be rewritten.');
     load(fullfile(fpath_output,['TableResults_' ProtocolName '.mat']));
     TableAux = array2table(Array_for_table,'VariableNames',tab_varNames);
-    TableResults = [TableResults; TableAux];
+    TableResults = TableAux;
     save(fullfile(fpath_output,['TableResults_' ProtocolName '.mat']),'TableResults');
 else
     TableResults = array2table(Array_for_table,'VariableNames',tab_varNames);

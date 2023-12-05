@@ -13,8 +13,10 @@ for meas_indx = 1:numel(path_measurements)
     figure(numel(path_measurements)+1);
     TableFile = dir(fullfile(path_measurements{meas_indx},'Results','TableResults_*.mat'));
     load(fullfile(path_measurements{meas_indx},'Results', TableFile.name));
-    subplot(2,2,1), plot(TableResults.("Perc. Fluctuation"),'o--'); hold on; subplot(2,2,2), plot(TableResults.Drift,'o--'); hold on;
-    subplot(2,2,3), plot(TableResults.SFNR,'o--');hold on; subplot(2,2,4), plot(TableResults.Rdc,'o--'); hold on;
+    subplot(2,2,1), plot(TableResults.Slice, TableResults.("Perc. Fluctuation"),'o--'); hold on; 
+    subplot(2,2,2), plot(TableResults.Slice, TableResults.Drift,'o--'); hold on;
+    subplot(2,2,3), plot(TableResults.Slice, TableResults.SFNR,'o--');hold on; 
+    subplot(2,2,4), plot(TableResults.Slice, TableResults.Rdc,'o--'); hold on;
 
     for i = 1:4 
         subplot(2,2,i), grid minor; box off; xlabel('Slice number/position'); 
@@ -23,5 +25,7 @@ for meas_indx = 1:numel(path_measurements)
     subplot(2,2,2), title('Drift');
     subplot(2,2,3), title('Signal-to-fluctuation-noise ratio (SFNR)');
     subplot(2,2,4), title('Radius of decorrelation');
+    
+    clear TableResults
 
 end

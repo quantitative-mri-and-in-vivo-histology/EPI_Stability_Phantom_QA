@@ -141,11 +141,6 @@ Ycir = round(R/2*sin(theta) + R/2);
 %  set up input and ROI mask
 mask = poly2mask(Xcir,Ycir,R,R);%ones(R);
 npx = sum(mask(:)==1);
-%img = zeros(header.AcquisitionMatrix(4),header.AcquisitionMatrix(1),1);
-    
-% Mosaic Dimensionen ********Nur wenn phase H/F?********
-%Mosaic_rows = header.Height / header.AcquisitionMatrix(4);
-%Mosaic_columns = header.Width / header.AcquisitionMatrix(1);
 
 % Anzahl Rep.
 if ~params.defaults
@@ -163,11 +158,7 @@ end
 %-FJv23(25.01): Ok, I am not completely sure if this is the same across all
 %DICOMs in Siemens, but it seems that the number of slices is given by a
 %private variable.
-%if ~isfield(header,'Private_0019_100a')
-%    slices = double(input('DICOM flag for slice number is not incorporated. Please add it manually: '));
-    %slices = Mosaic_columns * Mosaic_rows;
-%else
-%    slices = double(header.Private_0019_100a);
+
 %end
 TotalSlices = size(loaded_images,3);
 str = sprintf('Indicate the number of slices in your measurement (default = %d) = ', TotalSlices);
@@ -197,8 +188,7 @@ M = r2 - r1 + 1;                % num ROI's
 for slice_eval = slice_eval_start:slice_eval_stop
     
     %Einzelbildkoordinaten im Mosaic
-    %imgX = fix((slice_eval -1) / double(Mosaic_columns)) * header.AcquisitionMatrix(4) + 1;
-    %imgY = mod(slice_eval - 1,Mosaic_columns) * header.AcquisitionMatrix(1) +1;
+    
         
 % init ROIs    
     roir = zeros(N,M);
@@ -219,7 +209,6 @@ for slice_eval = slice_eval_start:slice_eval_stop
 
 % Phantomposition im ersten Bild finden
     %dummy = double(dicomread(fullfile(fpath,fname))); % this is the fname from the beginning.
-    %FitI = dummy(imgX:imgX+header.AcquisitionMatrix(4)-1,imgY:imgY+header.AcquisitionMatrix(1)-1)/4096; % Nur Einzelbild skaliert auf 0-1
     FitI = loaded_images(:,:,slice_eval,1)/max(max(loaded_images(:,:,slice_eval,1)));
     threshold = graythresh(FitI);
     BW = im2bw(FitI,threshold);

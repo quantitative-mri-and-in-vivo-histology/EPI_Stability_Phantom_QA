@@ -2,13 +2,21 @@ function CreateFigures(path_measurements)
 
 for meas_indx = 1:numel(path_measurements)
     load(fullfile(path_measurements{meas_indx},'loaded_images.mat'));
-
+    ROImask = dir(fullfile(path_measurements{meas_indx},'Results','*_CircleROI.nii'));
+    
+    if numel(ROImask) > 1
+        ROImask_volume = niftiread(fullfile(ROImask(end).folder,ROImask(end).name));
+    else
+        ROImask_volume = niftiread(fullfile(ROImask.folder,ROImask.name));
+    end
+        
     figure(meas_indx); 
     for i = 1:16
-        subplot(4,4,i), imagesc(loaded_images(:,:,i,1)/800,[0,1]); title(['Slice #' num2str(i)]);
+        subplot(4,4,i), imagesc(loaded_images(:,:,i,1)/800,[0,1]); title(['Slice #' num2str(i)]); hold on;       
+        subplot(4,4,i), imcontour(ROImask_volume(:,:,i),1,'-r');
     end
     
-    clear loaded_images
+    clear loaded_images ROImask ROImask_volume 
 
     figure(numel(path_measurements)+1);
     TableFile = dir(fullfile(path_measurements{meas_indx},'Results','TableResults_*.mat'));
